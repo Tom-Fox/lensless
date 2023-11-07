@@ -1,0 +1,8 @@
+flask==3.0.0
+pysimplegui
+docutils 
+pygments 
+pypiwin32 
+kivy.deps.sdl2 
+kivy.deps.glew
+kivy
