@@ -3,7 +3,7 @@ import models
 import rawPic
 
 def getGenePic(input):
-    openai.api_key = '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'
+    openai.api_key = 'xxxxxx'
     response = openai.Image.create(
     prompt="a white siamese cat",
     n=1,
