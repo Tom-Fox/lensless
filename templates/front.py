@@ -93,6 +93,8 @@ while True:
         input.time = getTime()
         input.gps = GPS.getGPS()
         input.direction = Direction.getDirection()
+        input.pic = rawPic.getRawPic(input.gps, input.direction)
+        print(input.gps)
         print('button OK pressed')
         print(input.getInput())
         window.FindElement('-TITLE-').Update(visible=False)
