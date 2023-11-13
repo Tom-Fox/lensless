@@ -1,25 +1,22 @@
-import PySimpleGUI as sg
-
+import PySimpleGUI as psg
+import time
 layout = [
-    [sg.Text('Click to add a row inside the frame'), sg.B('+', key='-B1-')],
-    [sg.Column([[sg.T('A New Input Line1')]], key='-COL1-', scrollable=True, vertical_scroll_only=True, size=(500, 200))],
-    [sg.Input(key='-IN-'), sg.Text(size=(12,1), key='-OUT-')],
-    [sg.Button('Clear'), sg.Button('Exit')]  ]
-
-window = sg.Window('Window Title', layout, finalize=True)
-i = 0
-while True:             # Event Loop
-    event, values = window.read()
-    print(event, values)
-    if event in (sg.WIN_CLOSED, 'Exit'):
-        break
-    if event == '-B1-':
-        window.extend_layout(window['-COL1-'], [[sg.T('A New Input Line'), sg.I(key=f'-IN-{i}-')]])
-        i += 1
-        window['-COL1-'].contents_changed()
-
-    if event == "Clear":
-        window['-COL1-'].update([])
-
-
+   [psg.ProgressBar(20, orientation='h', expand_x=True, size=(20, 20),  key='-PBAR-'), psg.Button('Test')],
+   [psg.Text('', key='-OUT-', enable_events=True, font=('Arial Bold', 16), justification='center', expand_x=True)]
+]
+window = psg.Window('Progress Bar', layout, size=(715, 150))
+while True:
+   event, values = window.read()
+   print(event, values)
+   if event == 'Test':
+      window['Test'].update(disabled=True)
+      for i in range(100):
+         window['-PBAR-'].update(current_count=i + 1)
+         window['-OUT-'].update(str(i + 1))
+         time.sleep(1)
+         window['Test'].update(disabled=False)
+   if event == 'Cancel':
+      window['-PBAR-'].update(max=20)
+   if event == psg.WIN_CLOSED or event == 'Exit':
+      break
 window.close()

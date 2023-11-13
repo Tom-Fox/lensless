@@ -1,40 +1,31 @@
-import PySimpleGUI as sg
-
-def make_window1():
-    layout = [[sg.Text('Window 1'), ],
-              [sg.Input(key='-IN-')],
-              [sg.Text(size=(20, 1), key='-OUTPUT-')],
-              [sg.Button('Launch 2'), sg.Button('Output')]]
-
-    return sg.Window('Window 1', layout,size=(600,250), finalize=True)
-
-def make_window2():
-    layout = [[sg.Text('Window 2')],
-               [sg.Button('Exit')]]
-
-    return sg.Window('Window 2', layout,size=(600,250), finalize=True)
-
-def main():
-    window2 = None
-    window1 = make_window1()
-
-    while True:
-        window, event, values = sg.read_all_windows()
-        if event == sg.WIN_CLOSED and window == window1:
-            break
-
-        if window == window1:
-            window1['-OUTPUT-'].update(values['-IN-'])
-
-        if event == 'Launch 2' and not window2:
-            window1.hide()
-            window2 = make_window2()
-
-        if window == window2 and (event in (sg.WIN_CLOSED, 'Exit')):
-            window2.close()
-            window2 = None
-            window1.un_hide()
-    window1.close()
-
-if __name__ == '__main__':
-    main()
+from kivy.app import App   #导入kivy的app类，它是所有kivy应用的基类
+from kivy.uix.button import Button #引入控件
+from kivy.uix.floatlayout import FloatLayout  #引入布局
+from kivy.graphics import Rectangle,Color
+  
+class FloatLayoutApp(App):  #继承app类
+    def build(self):  #实现app类的build（）方法
+        def update_rect(layout,*args):
+            #设置背景尺寸，可忽略
+            layout.rect.pos=layout.pos
+            layout.rect.size=layout.size
+  
+        float_layout=FloatLayout()
+  
+        #设置背景颜色（可忽略）
+        with float_layout.canvas:
+            Color(1,1,1,1)
+            float_layout.rect=Rectangle(pos=float_layout.pos,size=float_layout.size)
+            float_layout.bind(pos=update_rect,size=update_rect)
+  
+        #在布局内的【300，200】处添加一个尺寸为0.3，0.2的按钮
+        button=Button(text='FloatLayout',size_hint=(.3,.2),pos=(0,0))
+        #这里的pos参数不会因窗口改变而改变位置，这个是固定位置，要随窗口变化而动态变化的要用pos_hint
+  
+        #将按钮添加到布局内
+        float_layout.add_widget(button)
+        #返回布局
+        return float_layout
+  
+if __name__=='__main__':  #程序入口
+        FloatLayoutApp().run() #启动应用程序

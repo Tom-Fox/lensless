@@ -1,6 +1,7 @@
 class Input:
-    def __init__(self,time='2023', gps='', direction=[],pic =''):
+    def __init__(self,time='2023', style='', gps='', direction=[],pic =''):
         self.time = time
+        self.style = style
         self.gps = gps
         self.direction = direction
         self.pic = pic
