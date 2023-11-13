@@ -8,7 +8,6 @@ import Direction
 
 from PIL import Image, ImageTk, ImageSequence
 import tkinter as tk
-from kivy.uix.button import Button #引入控件
 
 sg.theme('Black')   # Add a touch of color
 
@@ -21,7 +20,7 @@ GifFilename = "img/loading.gif"
 reTime = 2023
 reStyle = 'pixel'
 title = sg.Text(text='TimeMachine', font=('Arial Bold', 30),key='-TITLE-', expand_x=True,justification='center')
-chooseBar = sg.Slider(range=(2050,1950), default_value=reTime, resolution=1, orientation='v', key='-SL-')
+chooseBar = sg.Slider(range=(2050,1950), default_value=reTime, resolution=1, orientation='h', key='-SL-')
 
 
 reset = sg.Button('RESET',key='-RESET-', size=6)
@@ -34,17 +33,16 @@ get_style = reStyle
 input = models.Input()
 #input.gps = '35.710835661046396, 139.7603010534206'
 #input.direction = [90.0,90.0] 
-img = sg.Image(size = (30, 30), key = "-GENEIMG-",visible=False)
+img = sg.Image('logo\\span_re.png',key = "-GENEIMG-")
 loadNum = sg.Text('20', key='-NUM-', enable_events=True, font=('Arial Bold', 16), justification='center', expand_x=True,visible=False)
 #layout
 index=[
         [title],
-        [img],
-        
         [sg.Text(text = 'Choose your time',key='-TEXT-')],
+        [back],
+        [img],
         [loadBar],
         [chooseBar],
-        [back],
         [loadNum],
         [reset, save]
 ]
@@ -80,7 +78,6 @@ def getTime():
 def getStyle():
     return get_style
 
-
 def showGIf():
 
     root = tk.Tk()
@@ -100,15 +97,6 @@ def showGIf():
         root.update()
         root.mainloop()
 
-
-'''
-def ChangePage():
-    window=sg.Window('Window Title',layout2,
-                 size=(600,250)
-                 )
-    window["-GENEIMG-"].update(gImgUrl)
-'''
-
 def ChangePicSize(gImg):
     
     # 打开一个jpg图像文件，注意是当前路径:
@@ -120,9 +108,9 @@ def ChangePicSize(gImg):
     im.thumbnail((w//2, h//2))
     print('Resize image to: %sx%s' % (w//4, h//4))
     # 把缩放后的图像用jpeg格式保存:
-    im.save('img\\akamonn_resize.png', 'png') 
+    im.save('image_ai\\akamonn_resize.png', 'png') 
     print('Reset size!')
-    return 'img\\akamonn_resize.png'
+    return 'image_ai\\akamonn_resize.png'
 
 def step1():
     input.gps = GPS.getGPS()
@@ -133,7 +121,6 @@ def step2():
     gImg = gene.getGenePic(input.time,input.style)
     print("check this setp tool")
     return gImg
-
 
 # Event Loop to process "events" and get the "values" of the inputs
 while True:
@@ -149,59 +136,54 @@ while True:
         window.find_element('-TITLE-').Update(visible=False)
         window.find_element('-TEXT-').Update(visible=False)
         window.find_element('-SL-').Update(visible=False)
-        #window.find_element('-GIF-').PopupAnimated(GifFilename)
-        #Image.UpdateAnimation(GifFilename, time_between_frames=50)
-        #window["-GENEIMG-"].update('img\\loading.gif')
-        
-        #showGIf()
-        while gImg == '':
-            input.style = getStyle()
-            input.time = getTime()
-            window.find_element('-RESET-').Update(visible=False)
-            window.find_element('-OK-').Update(visible=False)
-            window.find_element('-BACK-').Update(visible=False)
-            window.find_element('-PBAR-').Update(visible=True)
-            window.find_element('-NUM-').Update(visible=True)
-            for i in range(100):
-                window['-PBAR-'].update(current_count=i+1)
-                window['-NUM-'].update(f'{i+1}%')
-                time.sleep(0.05)  # Adjust this value as needed for your processing time
 
-                if i == 30:  # Start the image generation around halfway
-                    step1()
-                if i == 70:
-                    gImg = step2()
-                    time.sleep(0.01)
+
+        input.style = getStyle()
+        input.time = getTime()
+        window.find_element('-RESET-').Update(visible=False)
+        window.find_element('-OK-').Update(visible=False)
+        window.find_element('-BACK-').Update(visible=False)
+        window.find_element('-PBAR-').Update(visible=True)
+        window.find_element('-NUM-').Update(visible=True)
+        for i in range(100):
+            window['-PBAR-'].update(current_count=i+1)
+            window['-NUM-'].update(f'{i+1}%')
+            time.sleep(0.01)  # Adjust this value as needed for your processing time
+
+            if i == 30:  # Start the image generation around halfway
+                step1()
+            if i == 70:
+                gImg = step2()
+                time.sleep(0.01)
         
-        if gImg != '':
-            print(gImg)
-            window.find_element('-BACK-').Update(visible=True)
-            window.find_element('-PBAR-').Update(visible=False)
-            window.find_element('-NUM-').Update(visible=False)
-            window.find_element('-GENEIMG-').Update(visible=True)
-            window["-GENEIMG-"].update(ChangePicSize(gImg))
-        
+        #if gImg != '':
+        print(gImg)
+        window.find_element('-BACK-').Update(visible=True)
+        window.find_element('-PBAR-').Update(visible=False)
+        window.find_element('-NUM-').Update(visible=False)
+        window.find_element('-GENEIMG-').Update(visible=True)
+        window["-GENEIMG-"].update(ChangePicSize(gImg))
+        #window.Refresh()
 
     if event == "-RESET-":
         window["-SL-"].update(value=reTime)
         print('button RESET pressed')
 
     if event == "-BACK-":
+        #window.find_element('-GENEIMG-').Update(visible=False)
+        window["-GENEIMG-"].update('logo\\span_re.png')
+        window.find_element('-RESET-').Update(visible=True)
+        window.find_element('-OK-').Update(visible=True)
         window.find_element('-TITLE-').Update(visible=True)
         window["-SL-"].update(value=reTime)
         window.find_element('-TEXT-').Update(visible=True)
         window.find_element('-SL-').Update(visible=True)
-        window.find_element('-GENEIMG-').Update(visible=False)
-        window.find_element('-RESET-').Update(visible=True)
-        window.find_element('-OK-').Update(visible=True)
-        window.find_element('-BACK-').Update(visible=False)
         
+        window.find_element('-BACK-').Update(visible=False)
+        #window.Refresh()
         print('button BACK pressed')
 
     if event==None:
         break
 
 window.close()
-
-
-

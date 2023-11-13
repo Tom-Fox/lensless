@@ -1,32 +1,12 @@
-# main.py
-from kivy.app import App
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.floatlayout import FloatLayout  #引入布局
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.anchorlayout import AnchorLayout
-from kivy.uix.button import Button
-from kivy.uix.textinput import TextInput
-from kivy.uix.label import Label # 译者注：这里是从kivy.uix.label包中导入Label控件，这里都注意开头字母要大写
+from PIL import Image
 
-class MainScreen(BoxLayout):
-
-    def __init__(self, **kwargs):
-        super(MainScreen, self).__init__(**kwargs)
-        self.rows = 3
-        self.add_widget(Label(text='TIME MACHINE'))
-
-
-        self.add_widget(Label(text='choose your time'))
-        self.password = TextInput(password=True, multiline=False)
-        self.add_widget(self.password)
-        self.add_widget(Button(text='RESET'
-                               #,pos=(300,200)
-                               ))
-        self.add_widget(Button(text='OK'))
-
-class TimeMachine(App):
-    def build(self):
-        return MainScreen()
-
-if __name__ == "__main__":
-    TimeMachine().run()
+im = Image.open('img\\span_re.png')
+# 获得图像尺寸:
+w, h = im.size
+print('Original image size: %sx%s' % (w, h))
+# 缩放到50%:
+im.thumbnail((w//4, h//4))
+print('Resize image to: %sx%s' % (w//4, h//4))
+# 把缩放后的图像用jpeg格式保存:
+im.save('img\\span_re.png', 'png') 
+print('Reset size!')
